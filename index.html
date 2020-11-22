@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="Description" content="Enter your description here"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css">
+<link rel="stylesheet" href="app.css">
+<title>Healthy Lifestyle at a glance | Adam Standish</title>
+</head>
+<body>
+
+  <header>
+    <h3>Find Your Fitness Lifestyle!</h3>
+  </header>
+
+  <main>
+    <section class="containter">
+      <h3>Pick Your Workout And Diet!</h3>
+      <form id="exerciseForm">
+        <label for="excerciseType">What Type of Excercise Today?</label>
+        <select name="exerciseType" id="exerciseType">
+          <option value="Weightlifting Workout">Weightlifting Workout</option>
+          <option value="Crossfit Workout">Crossfit/HIIT Workout</option>
+          <option value="Running Workout">Running Workout</option>
+          <option value="Yoga Workout">Yoga Workout</option>
+          <option value="Pilates Workout">Pilates Workout</option>
+        </select><br><br>
+      </form>
+      <button type="submit" form="exerciseForm" name="exerciseForm" value="Let's Go!">Let's Go!</button>
+
+    <div id="exercise" class="exercise hidden">
+      <ul class="exerciseResults">
+      </ul>
+    </div>
+
+      <form id="dietForm">
+        <label for="dietType">What Type Of Diet Are You On?</label>
+        <select name="dietType" id="dietType">
+          <option value="Ketogenic">Ketogenic</option>
+          <option value="Paleo">Paleo</option>
+          <option value="Gluten-Free">Gluten Free</option>
+          <option value="Vegan">Vegan</option>
+          <option value="Vegetarian">Vegetarian</option>
+        </select>
+      </form>
+      <button type="submit" form="dietForm" name="dietForm" value="Let's Go!">Find Your Recipe</button>
+
+    <div id="diet" class="diet hidden">
+      <ul class="dietResults">
+      </ul>
+    </div>
+    </section>
+    
+  </main>
+
+  <footer>
+    <h3>Adam Standish</h3>
+  </footer>
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
