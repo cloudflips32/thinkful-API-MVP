@@ -1,14 +1,15 @@
 'use strict';
 
+let id;
+
 const videoSearchURL = 'https://www.googleapis.com/youtube/v3/search';
 
 const videoApiKey = 'AIzaSyBKL_QU5ywZC8PIVKkZeAXXdZt85Fa93BU'; 
 
 const recipeSearchURL = 'https://api.spoonacular.com/recipes/complexSearch';
 
-const recipeDetails = 'https://api.spoonacular.com/recipes/${responseJson.results[i].id}/information?includeNutrition=false&apiKey=${recipeApiKey}';
-
 const recipeApiKey = 'e5ca2fbc6e1c4e07ac209c9b8b0a7ad0';
+
 
 
 function formatQueryParams(params) {
@@ -52,8 +53,8 @@ function displayExerciseResults(responseJson) {
     $('.exerciseResults').append(
       `<h3>Today's Featured Exercise:</h3>
         <li>
-          <a href="https://www.youtube.com/watch?key=${videoApiKey}v=${responseJson.items[i].id}"><h3>${responseJson.items[i].snippet.title}</h3></a><br>
-          <a href="https://www.youtube.com/watch?key=${videoApiKey}v=${responseJson.items[i].id}"><img class="thumbPic" src="${responseJson.items[i].snippet.thumbnails.medium.url}"></a><br>
+          <a href="https://www.youtube.com/watch?v=${responseJson.items[i].id.videoId}"><h3>${responseJson.items[i].snippet.title}</h3></a><br>
+          <a href="https://www.youtube.com/watch?v=${responseJson.items[i].id.videoId}"><img class="thumbPic" src="${responseJson.items[i].snippet.thumbnails.medium.url}"></a><br>
           <p>${responseJson.items[i].snippet.description}</p><br>
         </li>
       `
@@ -63,13 +64,12 @@ function displayExerciseResults(responseJson) {
   $('.exercise').removeClass('hidden');
 }
 
-function getDietChoice(query, resultCount=1) {
+function getDietChoice(query, resultCount=10) {
 
   const params = {
     apiKey: recipeApiKey,
     resultCount,
-    query: query,
-    includeNutrition: false
+    query: query
   };
 
   const queryString = formatQueryParams(params)
@@ -93,56 +93,62 @@ function displayDietResults(responseJson) {
   // if there are previous results, remove them
   console.log(responseJson);
   $('.dietResults').empty();
+
   // iterate through the items array
   for (let i = 0; i < responseJson.results.length; i++) {
-    $('.dietResults').append(
-      `
-      <h3>Todays Featured Meal:</h3>
-        <li>
-          <h3>${responseJson.results[i].title}</h3><br>
-          <img class="foodPic" src="${responseJson.results[i].image}"><br>
-          <a href ="${recipeDetails}"><button class="viewRecipe">View The Recipe Here!</button></a><br>
-        </li>
-      `
-    );
-  };
-    //display the results section  
-  $('.diet').removeClass('hidden');
-}
-
-function getRecipe(recipeDetails) {
-
-  fetch(recipeDetails)
+    let recipeId = responseJson.results[i].id;
+    console.log(recipeId);
+    getRecipe(recipeId)
     .then(response => {
       if (response.ok) {
+        console.log('about to return JSON response');
         return response.json();
       }
       throw new Error(response.statusText);
     })
-    .then(responseJson => displayRecipe(responseJson))
+    .then(recipe => {
+      console.log('creating result')
+      $('.dietResults').append(
+        `
+        <h3>Todays Featured Meal:</h3>
+          <li>
+            <h3>${responseJson.results[i].title}</h3><br>
+            <img class="foodPic" src="${responseJson.results[i].image}"><br><br>
+            <a href="${recipe.sourceUrl}" target="_blank">>>View Your Recipe Here!<<</a><br>
+          </li>
+        `
+      );
+    })
     .catch(err => {
       $('#js-error-message').text(`Something went wrong: ${err.message}`);
-  });
+    })
+  }
+  $('.diet').removeClass('hidden');
+} 
+
+function getRecipe(recipeId) {
+
+  console.log('its working');
+
+  let recipeDetails = 'https://api.spoonacular.com/recipes/' + recipeId + '/information?apiKey=' + recipeApiKey;
+  
+  return fetch(recipeDetails);
+
 }
 
 function displayRecipe(responseJson) { 
+
   $('.dietResults').empty();
+  console.log(responseJson);
+  
+  
 
-  $('.dietResults').append(
-    `
-    <li>
-      <h3>${responseJson.results[i].title}</h3><br>
-      <img src="${responseJson.results[i].image}" alt="recipe photo"><br>
-      <p>Ready in ${responseJson.results[i].readyInMinutes} minutes.</p><br><br>
-      <p class="instructions">${responseJson.results[i].analyzedInstructions.length}</p>
-    </li>
-    `
-  );
-
-  $('.results').removeClass('hidden');
+  $('.diet').removeClass('hidden');
 }
 
-function watchExerciseForm() {
+// Listeners
+
+function watchExerciseForm(responseJson) {
   $('#exerciseForm').submit(e => {
     e.preventDefault();
     const exercise = $('#exerciseType').val();
@@ -151,7 +157,7 @@ function watchExerciseForm() {
   });
 }
 
- function watchDietForm() {
+function watchDietForm(responseJson) {
   $('#dietForm').submit(e => {
     e.preventDefault();
     const diet = $('#dietType').val();
