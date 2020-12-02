@@ -46,9 +46,9 @@ function getFitnessChoice(query, maxResults=3) {
 }
 
 function displayExerciseResults(responseJson) {
-  // if there are previous results, remove them
-  console.log(responseJson);
   $('.exerciseResults').empty();
+  // if there are previous results, remove them
+  // console.log(responseJson);
   for (let i = 0; i < responseJson.items.length; i++) {
     $('.exerciseResults').append(
       `<h3>Today's Featured Exercise:</h3>
@@ -91,23 +91,23 @@ function getDietChoice(query, resultCount=10) {
 
 function displayDietResults(responseJson) {
   // if there are previous results, remove them
-  console.log(responseJson);
+  // console.log(responseJson);
   $('.dietResults').empty();
 
   // iterate through the items array
   for (let i = 0; i < responseJson.results.length; i++) {
     let recipeId = responseJson.results[i].id;
-    console.log(recipeId);
+    // console.log(recipeId);
     getRecipe(recipeId)
     .then(response => {
       if (response.ok) {
-        console.log('about to return JSON response');
+        // console.log('about to return JSON response');
         return response.json();
       }
       throw new Error(response.statusText);
     })
     .then(recipe => {
-      console.log('creating result')
+      // console.log('creating result')
       $('.dietResults').append(
         `
         <h3>Todays Featured Meal:</h3>
@@ -128,7 +128,7 @@ function displayDietResults(responseJson) {
 
 function getRecipe(recipeId) {
 
-  console.log('its working');
+  // console.log('its working');
 
   let recipeDetails = 'https://api.spoonacular.com/recipes/' + recipeId + '/information?apiKey=' + recipeApiKey;
   
