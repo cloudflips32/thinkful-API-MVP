@@ -136,16 +136,6 @@ function getRecipe(recipeId) {
 
 }
 
-function displayRecipe(responseJson) { 
-
-  $('.dietResults').empty();
-  console.log(responseJson);
-  
-  
-
-  $('.diet').removeClass('hidden');
-}
-
 // Listeners
 
 function watchExerciseForm(responseJson) {
